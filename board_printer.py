@@ -5,14 +5,14 @@ with open(BOARD_FILE) as f:
 
 
 def print_board(players):
-    """Display the state of the game using a text-drawing of a board."""
-
     # For each square that is occupied by one of the player's pawns, store the
     # first character of the player's color in a dict, for easy reference.
+    print()
+
     board = {}
     for player in players:
         for square in player['active_pawn_positions']:
-            board[square] = player[0]
+            board[square] = player["color"][0]
 
     # Scan the file contents character by character
     pos = 0
@@ -22,8 +22,8 @@ def print_board(players):
         if char == 'p':
             # A two-digit game board position.
             board_pos = int(board_string[pos+1:pos+3])
-            print(f"[{board.get(board_pos,' ')}]", end='')
-            pos += 2
+            print(f"[{board.get(board_pos, ' ')}]", end='')
+            pos += 3
 
         elif char == 'a' or char == 'h':
             # Either *available* or *home* pawns. The next two characters are single-digit
@@ -34,13 +34,13 @@ def print_board(players):
             player_num = int(board_string[pos+1])
             threshold = int(board_string[pos+2])
 
-            if player_num > len(players):
+            if player_num >= len(players):
                 # This player number is not participating, don't show anything.
-                print("   ")
+                print("   ", end='')
             else:
                 player = players[player_num]
-                value = player['available_pawn_count'] if char=='a' else player['home_pawn_count']
-                output = player['color'][0] if value>=threshold else '_'
+                value = player['available_pawn_count'] if char == 'a' else player['home_pawn_count']
+                output = player['color'][0] if value >= threshold else '_'
                 print(f" {output} ", end='')
             pos += 3
 
